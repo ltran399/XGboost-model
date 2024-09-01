@@ -3,6 +3,7 @@ import joblib
 import numpy as np
 from gensim.models import Word2Vec
 from scipy.sparse import hstack, csr_matrix
+import os
 
 # Load the model and vectorizer
 model = joblib.load('relevance_score_xgboost_model.pkl')
@@ -53,4 +54,5 @@ def predict():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
