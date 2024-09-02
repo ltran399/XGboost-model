@@ -6,9 +6,17 @@ from scipy.sparse import hstack, csr_matrix
 import os
 
 # Load the model and vectorizer
-model = joblib.load('relevance_score_xgboost_model.pkl')
-vectorizer = joblib.load('tfidf_vectorizer.pkl')
-word2vec_model = Word2Vec.load('word2vec_model_file')
+# Ensure the paths are correct relative to where your app is running.
+model_path = 'relevance_score_xgboost_model.pkl'
+vectorizer_path = 'tfidf_vectorizer.pkl'
+word2vec_model_path = 'word2vec_model_file'
+
+try:
+    model = joblib.load(model_path)
+    vectorizer = joblib.load(vectorizer_path)
+    word2vec_model = Word2Vec.load(word2vec_model_path)
+except Exception as e:
+    raise RuntimeError(f"Error loading model or vectorizer: {str(e)}")
 
 # Function to generate average word vectors
 def get_average_word2vec(review, model, vector_size):
@@ -51,6 +59,8 @@ def predict():
         return jsonify({'relevance_score': float(relevance_score[0])})
     
     except Exception as e:
+        # Log the error for debugging purposes
+        print(f"Error during prediction: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
