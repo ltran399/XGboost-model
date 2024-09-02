@@ -63,6 +63,10 @@ def predict():
         print(f"Error during prediction: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
+@app.route('/', methods=['GET'])
+def index():
+    return 'Relevance Score API is running. Use the /predict endpoint to make predictions.'
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
